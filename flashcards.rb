@@ -1,3 +1,5 @@
+require 'debugger'
+
 class Deck
   attr_reader :deck
 
@@ -45,7 +47,7 @@ class Flashcard
   end
   
   def is_correct?(guess)
-    guess == @answer
+    guess.upcase == @answer.upcase
   end
   
 end
@@ -59,21 +61,23 @@ class Dealer
   
   def run 
     @viewer.print_welcome
+    @deck.shuffle
     ask_question
   end
 
   def ask_question
     unless @deck.finished?
-      @question = @deck.next_question
+      @question = @deck.next_question.question
       @viewer.print_question(@question)
-      check_answer(gets.chomp)
+      guess = STDIN.gets.chomp
+      check_answer(guess)
     end
     @viewer.print_exit
     exit  
   end
 
   def check_answer(guess)
-    if @question.is_correct?(guess.upcase)
+    if @deck.next_question.is_correct?(guess)
       @viewer.print_correct
       @deck.remove_answered_question
       ask_question
@@ -86,26 +90,28 @@ end
 
 class Viewer
   def print_welcome
-    puts "Welcome to Ruby Flashcards!"  
+    puts "Welcome to Ruby Flashcards!\n\n"  
   end
 
   def print_question(question)
     puts "Definition:\n#{question}\n\n"
-    puts "Guess: "
+    print "Guess: "
   end
   
   def print_correct
-    puts "That's Correct!"
+    puts "\nThat's Correct!\n\n"
   end
 
   def print_incorrect
-    puts "Try again..."
+    puts "\nTry again...\n\n"
   end
 
   def print_exit
-    puts "Thank you for playing."
+    puts "\nThank you for playing."
   end
 
 end
 
-Dealer.new(ARGV[0]).run
+
+filename = ARGV[0]
+Dealer.new(filename).run
