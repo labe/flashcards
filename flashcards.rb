@@ -41,6 +41,7 @@ class Flashcard
 end
 
 class Dealer
+  
   def initialize(file)
     @deck = Deck.new(file)
     @viewer = Viewer.new
@@ -48,24 +49,27 @@ class Dealer
   
   def run 
     @viewer.print_welcome
-    until @deck.finished?
-      print_question
-      check_answer(gets.chomp)
-    end
-    @viewer.print_exit    
+    ask_question
   end
 
-  def print_question
-    @viewer.print_question(@deck.deck[0].question)
+  def ask_question
+    unless @deck.finished?
+      @question = @deck.next_question
+      @viewer.print_question(@question)
+      check_answer(gets.chomp)
+    end
+    @viewer.print_exit
+    exit  
   end
 
   def check_answer(guess)
-    if @deck.deck[0].is_correct?(guess.upcase)
+    if @question.is_correct?(guess.upcase)
       @viewer.print_correct
-      @deck.next_question
+      @deck.remove_answered_question
+      ask_question
     else
       @viewer.print_incorrect
-      @viewer.print_question
+      ask_question
     end
   end
 end   
@@ -76,7 +80,8 @@ class Viewer
   end
 
   def print_question(question)
-    puts "Definition:\n#{question}"
+    puts "Definition:\n#{question}\n\n"
+    puts "Guess: "
   end
   
   def print_correct
