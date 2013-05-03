@@ -3,27 +3,37 @@ class Deck
 
   def initialize(file)
      @file = file
-     @deck = []     
+     @deck = []    
      import_deck
+     add_flashcards
   end
 
   def import_deck
-    # @deck << 
+    @imported_deck =  File.read(@file).split("\n\n")
+  end
+
+  def add_flashcards
+    @imported_deck.each do |pair| 
+      card = pair.split("\n")
+      @deck << Flashcard.new(card[0], card[1])
+    end
   end
 
   def shuffle
-    
+    @deck.shuffle!
   end
 
   def next_question
-    
+    @deck.first
   end
 
   def finished?
-    
+    @deck.empty?
   end
-  
-  
+
+  def remove_answered_question
+    @deck.shift
+  end
 end
 
 class Flashcard
