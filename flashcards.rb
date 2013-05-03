@@ -8,7 +8,7 @@ class Deck
   end
 
   def import_deck
-    @deck << 
+    # @deck << 
   end
 
   def shuffle
@@ -35,7 +35,7 @@ class Flashcard
   end
   
   def is_correct?(guess)
-    true if guess == @answer
+    guess == @answer
   end
   
 end
@@ -54,8 +54,8 @@ class Dealer
   end
   
   def check_answer(guess)
-    if 
-
+    # if 
+  end
 end   
 
 class Viewer
@@ -84,4 +84,4 @@ class Viewer
 
 end
 
-Dealer.new(ARGV[0]).run
+# Dealer.new(ARGV[0]).run
